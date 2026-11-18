@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Session tab strip",
-    "description": "Shows a session tab strip below the three columns for quick session switching."
+    "description": "Shows a session tab strip below the three columns for quick session switching. Workspaces can be tabs too: click one to pop up its sessions."
   }
 }
