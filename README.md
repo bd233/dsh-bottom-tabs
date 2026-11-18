@@ -3,7 +3,7 @@
 <p align="center"><b>给 DeepSeek Harness Web UI 一条浏览器风格的会话标签栏。</b></p>
 
 <p align="center">
-  多个会话并列切换 · 底栏倒挂页签 · 状态一眼可见
+  会话与工作区并列切换 · 工作区一键展开 · 状态一眼可见
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
 > 💡 **它解决什么？** 左侧栏会话比较多的时候，切换会话，需要翻列表。标签栏把多个在用或常用会话并排挂在窗口**底部**，像浏览器或 VS Code 一样点击切换。
 
 <p align="center">
-  <img src="./assets/tab-bar.png" alt="窗口底部标签栏：当前标签白底长进页面、蓝点标记，其余标签灰点" width="100%">
+  <img src="./assets/tab-bar.png" alt="窗口底部标签栏 + 工作区弹层：左边是当前工作区「dsh-bottom-tabs」标签（文件夹字形、蓝竖条、展开箭头），它上方弹出该工作区的会话列表；右边是会话标签与新建按钮" width="100%">
 </p>
 
 ***
@@ -29,16 +29,12 @@
 <table>
 <tr><th align="center" width="130">模块</th><th align="left">说明</th></tr>
 <tr>
-<td align="center">🗂️<br/><b>会话标签</b></td>
-<td>底部一条标签栏，每个标签是一个<strong>真实会话</strong>；点一下即切换，当前标签蓝点 + 白底"长进"页面里。</td>
-</tr>
-<tr>
 <td align="center">➕<br/><b>新建标签</b></td>
 <td>点击<code>“+”</code>图标按钮，在当前工作区自动打开新会话，新会话创建后<strong>自动</strong>成为一个标签。</td>
 </tr>
 <tr>
 <td align="center">✖️<br/><b>关闭标签</b></td>
-<td>点击<code>×</code> 或<strong>鼠标中键</strong>把标签移出标签栏；只关标签、<strong>不归档会话</strong>，侧栏里它还在。关掉当前标签时自动切到相邻的一个。</td>
+<td>点击<code>×</code> 或<strong>鼠标中键</strong>把标签移出标签栏；只关标签、<strong>不归档会话</strong>，侧栏里它还在。</td>
 </tr>
 <tr>
 <td align="center">↔️<br/><b>拖拽排序</b></td>
@@ -46,11 +42,15 @@
 </tr>
 <tr>
 <td align="center">🖱️<br/><b>右键添加</b></td>
-<td>侧栏任意会话右键 →「<strong>添加到 Tab</strong>」；已在标签栏中的会话该项<strong>置灰</strong>。</td>
+<td>侧栏任意会话右键 →「<strong>添加到标签栏</strong>」；已在标签栏中的会话该项<strong>置灰</strong>。</td>
+</tr>
+<tr>
+<td align="center">📁<br/><b>工作区标签</b></td>
+<td>侧栏任意<strong>工作区</strong>右键 →「<strong>添加到标签栏</strong>」。工作区标签带文件夹字形与 <code>⌄</code> 展开箭头，一眼区别于会话标签。</td>
 </tr>
 <tr>
 <td align="center">💾<br/><b>持久化</b></td>
-<td>标签顺序与标题缓存在 <code>localStorage</code>，刷新页面、重启 GUI 后都还在。</td>
+<td>标签顺序、标题缓存与「工作区上次活跃会话」都存在 <code>localStorage</code>，刷新页面、重启 GUI 后都还在。</td>
 </tr>
 <tr>
 <td align="center">🪶<br/><b>轻量</b></td>
@@ -83,8 +83,22 @@ npm 包页：<https://www.npmjs.com/package/dsh-bottom-tabs>。装完刷新 Web 
 2. **切换**：点标签即可跳到该会话，等于侧栏里点它一下。
 3. **新建**：「+」创建新会话（同侧栏「新会话」），创建完自动追加成标签。
 4. **关闭**：`×` 或中键；只从标签栏移除，会话本身不受影响，还能从右键菜单加回来。
-5. **添加已有会话**：侧栏会话右键 →「添加到 Tab」。
+5. **添加已有会话**：侧栏会话右键 →「添加到标签栏」。
 6. **排序**：直接拖标签左右移动，松手前就能看到位置；顺序会被记住。
+7. **工作区标签**：侧栏工作区右键 →「添加到标签栏」。
+
+## 🆕 最近更新
+
+### v0.2.0 — 工作区标签
+
+- 侧栏工作区右键多了一项「**添加到标签栏**」。
+- 弹层里有状态点、相对时间与「已在底栏」标记，**已归档的会话不列出**；点外部、按 `Esc`、滚动或缩放都会收起。
+
+### v0.1.1 / v0.1.0
+
+- 底栏会话标签栏：新建、关闭（`×` / 中键）、拖拽排序、状态圆点、`localStorage` 持久化。
+
+完整历史见 [CHANGELOG.md](./CHANGELOG.md)。
 
 ### 圆点含义
 
@@ -111,7 +125,8 @@ npm 包页：<https://www.npmjs.com/package/dsh-bottom-tabs>。装完刷新 Web 
 ```
 
 - 仓库结构：`client.js`（全部前端逻辑）· `index.js`（空宿主入口）· `cordis.patch.yml`（bundle 挂载）· `locale/*.json`（插件元信息文案）。
-- 调试：DSH Web 控制台看 `[session-tabs]` 前缀日志；标签状态在 `localStorage['dsh.session-tabs.v1']`。
+- 调试：DSH Web 控制台看 `[session-tabs]` 前缀日志；标签状态在 `localStorage['dsh.session-tabs.v1']`，结构为 `{ v: 2, order: [{ k: 's' | 'w', id }], titles, wsTitles, wsLast }`。
+- 兼容旧数据：`v1` 时期的 `order: string[]` 读进来会自动归一化成会话条目；**键名不变**，升级后的第一次写回会把原值原样备份到 `dsh.session-tabs.v1.bak`（只备份一次，出问题可手工恢复）。旧版插件读到新数据只会退化成纯会话标签，不会丢配置。
 - 可调项：CSS 变量 `--dsst-height`(36px) / `--dsst-tab-min`(56px) / `--dsst-tab-max`(200px) / `--dsst-pulse`(1.4s)。
 
 ## 📄 License

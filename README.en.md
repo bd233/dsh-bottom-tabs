@@ -1,13 +1,13 @@
 <h1 align="center">🗂️ dsh-bottom-tabs</h1>
 
-<p align="center"><b>Browser-style session tabs for the DeepSeek Harness Web UI.</b></p>
+<p align="center"><b>A browser-style session tab strip for the DeepSeek Harness Web UI.</b></p>
 
 <p align="center">
-  Sessions side by side · upside-down tabs along the bottom edge · status at a glance
+  Sessions and workspaces side by side · one click to unfold a workspace · status at a glance
 </p>
 
 <p align="center">
-  <a href="./README.md">简体中文</a> · <a href="./README.en.md">English</a>
+  <a href="./README.en.md">English</a> · <a href="./README.md">简体中文</a>
 </p>
 
 <p align="center">
@@ -16,10 +16,10 @@
   <img src="https://img.shields.io/badge/runtime-browser%20only-lightgrey?style=flat-square" alt="browser only">
 </p>
 
-> 💡 **What it solves.** Once the sidebar holds a pile of sessions, switching between them means scrolling a list. This strip puts the sessions you are using or keep coming back to side by side at the **bottom** of the window, so you switch with a click — like a browser or VS Code.
+> 💡 **What problem does it solve?** When the sidebar holds a lot of sessions, switching means scrolling a list. The tab strip pins the sessions you are using or keep coming back to side by side at the **bottom** of the window, so you switch with a click — like a browser or VS Code.
 
 <p align="center">
-  <img src="./assets/tab-bar.png" alt="Tab strip at the bottom of the window: the current tab has a white body and a blue dot; the others show grey dots" width="100%">
+  <img src="./assets/tab-bar.png" alt="Bottom tab strip plus a workspace popover: the current workspace tab (folder glyph, accent bar, chevron) with its session list popped up above it, then session tabs and the new-tab button" width="100%">
 </p>
 
 ***
@@ -29,89 +29,104 @@
 <table>
 <tr><th align="center" width="130">Module</th><th align="left">What it does</th></tr>
 <tr>
-<td align="center">🗂️<br/><b>Session tabs</b></td>
-<td>One tab per <strong>real session</strong>. Click to switch; the active tab gets a blue dot and a solid background that "grows into" the page above.</td>
-</tr>
-<tr>
 <td align="center">➕<br/><b>New tab</b></td>
-<td>Click the <code>+</code> icon to open a new session in the current workspace; the new session <strong>automatically</strong> becomes a tab.</td>
+<td>Click the <code>“+”</code> button to open a new session in the current workspace; the new session becomes a tab <strong>automatically</strong>.</td>
 </tr>
 <tr>
 <td align="center">✖️<br/><b>Close tab</b></td>
-<td>Click <code>×</code> or <strong>middle-click</strong> to take a tab out of the strip. The tab only — the session is <strong>not archived</strong> and stays in the sidebar. Closing the active tab switches to its neighbour automatically.</td>
+<td>Click <code>×</code> or <strong>middle-click</strong> to take a tab out of the strip. The tab only — the session is <strong>not archived</strong> and stays in the sidebar.</td>
 </tr>
 <tr>
-<td align="center">↔️<br/><b>Drag to reorder</b></td>
-<td>Press and drag any tab left or right; the other tabs <strong>move aside live</strong> as the pointer passes, and the new order is cached immediately. Dropping on empty space moves the tab to the far right.</td>
+<td align="center">↔️<br/><b>Reorder</b></td>
+<td>Drag any tab left or right; the other tabs make room <strong>as you drag</strong>, and the new order is written to storage immediately. Dropping on empty space moves it to the far right.</td>
 </tr>
 <tr>
-<td align="center">🖱️<br/><b>Add from menu</b></td>
-<td>Right-click any session in the sidebar → <strong>Add to tab</strong>. The item is greyed out for sessions already in the strip.</td>
+<td align="center">🖱️<br/><b>Right-click to add</b></td>
+<td>Right-click any session in the sidebar → <strong>Add to tab strip</strong>. The item is greyed out for sessions already in the strip.</td>
+</tr>
+<tr>
+<td align="center">📁<br/><b>Workspace tabs</b></td>
+<td>Right-click any <strong>workspace</strong> in the sidebar → <strong>Add to tab strip</strong>. A workspace tab carries a folder glyph and a <code>⌄</code> chevron, so it never reads as a session tab.</td>
 </tr>
 <tr>
 <td align="center">💾<br/><b>Persistence</b></td>
-<td>Tab order and cached titles live in <code>localStorage</code>, so they survive a page reload or a GUI restart.</td>
+<td>Tab order, cached titles and each workspace's last active session live in <code>localStorage</code>, so they survive a page reload or a GUI restart.</td>
 </tr>
 <tr>
 <td align="center">🪶<br/><b>Lightweight</b></td>
-<td>Client-side only, a single <code>client.js</code>: no host services, no network, no file writes.</td>
+<td>Pure client-side plugin in a single <code>client.js</code>; registers no host service, makes no network calls, writes no files.</td>
 </tr>
 </table>
 
 ## 🚀 Install
 
-Requires DeepSeek Harness (desktop app or Web UI). The strip lives in the Web UI, independent of the DSH version installed.
+Requires the DeepSeek Harness desktop app or Web UI (the strip lives in the Web interface and does not depend on your local DSH version).
 
 ```
-# install from npm (recommended)
+# Install from npm (recommended)
 plugin_manager install_bundle dsh-bottom-tabs
 
-# install from a local path (when editing the code)
+# Install from a local path (while editing the code)
 plugin_manager install_bundle E:\path\to\dsh-bottom-tabs
 
-# uninstall
+# Uninstall
 plugin_manager remove_bundle dsh-bottom-tabs
 ```
 
-Package page: <https://www.npmjs.com/package/dsh-bottom-tabs>. Then reload the Web UI (Ctrl+R). For development, linking the repository path into the profile works the same way — edit and refresh.
+npm page: <https://www.npmjs.com/package/dsh-bottom-tabs>. Refresh the Web UI afterwards (Ctrl+R). During development, `link`-ing the repository path into the profile has the same effect — refresh to pick up changes.
 
-> Do not hand-edit the profile's `package.json`: the plugin manager maintains both `dependencies` and `dsh.profile.bundles`. Editing one of them by hand usually means the plugin either does not load or loads twice.
+> Don't hand-edit the profile's `package.json`: the plugin manager maintains both `dependencies` and `dsh.profile.bundles`, and a partial manual edit easily leaves the plugin unloaded or loaded twice.
 
 ## 📖 Usage
 
-1. **First run**: the strip seeds itself with your current session, so it is never empty.
+1. **First open**: the strip seeds one tab from the current session, so it is never empty.
 2. **Switch**: click a tab to jump to that session — the same as clicking it in the sidebar.
-3. **New**: `+` starts a new session (same as the sidebar's "New session") and appends it as a tab.
-4. **Close**: `×` or middle-click. It only leaves the strip; the session is untouched and can be added back from the context menu.
-5. **Add existing**: right-click a sidebar session → "Add to tab".
-6. **Reorder**: drag a tab left or right; it moves into place while you drag, and the order is remembered.
+3. **New**: "+" creates a new session (same as the sidebar's "New session") and appends it as a tab.
+4. **Close**: `×` or middle-click; the tab leaves the strip, the session is untouched and can be added back from the context menu.
+5. **Add existing**: right-click a sidebar session → "Add to tab strip".
+6. **Reorder**: drag a tab left or right; the order is remembered.
+7. **Workspace tabs**: right-click a workspace in the sidebar → "Add to tab strip".
+
+## 🆕 Recent updates
+
+### v0.2.0 — workspace tabs
+
+- Right-clicking a workspace in the sidebar now offers **Add to tab strip**.
+- The popover shows status dots, relative time and an "in tab strip" badge, and leaves archived sessions out; clicking outside, `Esc`, scrolling or resizing collapses it.
+
+### v0.1.1 / v0.1.0
+
+- Bottom session tab strip: new tab, close (`×` / middle-click), drag to reorder, status dots, `localStorage` persistence.
+
+Full history in [CHANGELOG.md](./CHANGELOG.md) (Chinese).
 
 ### Status dots
 
 | Dot | Meaning |
 |---|---|
 | 🔵 Blue | The session currently on screen |
-| 🟢 Green | Not current, finished, and you have not looked at it yet (`completionUnread`) |
-| ⚪ Grey + blue breathing ring | Not current, currently thinking / running |
+| 🟢 Green | Not current, thinking finished but you have not looked yet (`completionUnread`) |
+| ⚪ Grey + blue breathing ring | Not current, thinking / running |
 | ⚪ Grey | Plain tab, nothing new |
 
-> Priority: current > unread > thinking > idle. The current session never pulses while thinking — the conversation area itself already gives that feedback.
+> Priority: current > unread > thinking > plain. The current session does not pulse even while thinking — the conversation area already shows that.
 
 ## 🧩 Compatibility
 
-- The DeepSeek Harness Web UI (the Web view embedded in the desktop window, or the same UI opened directly in a browser).
-- Chromium-based browsers (Chrome / Edge). Tab state is stored in `localStorage` per UI origin, so changing port or token does not lose it on the same origin.
-- No host-side services required. Where `contextMenus` is unavailable the context-menu entry is simply absent and the strip keeps working.
+- The DeepSeek Harness Web UI (the Web view embedded in the desktop window, or a browser pointed at it).
+- Chromium-based browsers (Chrome / Edge). Tab state is stored per UI origin in `localStorage`, so a port or token change does not affect the same origin's data.
+- No host-side service required; where the `contextMenus` service is missing, the menu entries simply do not appear and the strip keeps working.
 
 ## 🛠️ Development
 
 ```sh
-# No build step: the repository itself is the installable bundle
-# edit client.js → reload the page (Ctrl+R) and it takes effect
+# No build step: the repository itself is an installable bundle
+# Edit client.js → refresh the page (Ctrl+R) to apply
 ```
 
-- Layout: `client.js` (all front-end logic) · `index.js` (empty host entry) · `cordis.patch.yml` (bundle mount) · `locale/*.json` (plugin metadata strings).
-- Debug: `[session-tabs]` lines in the DSH Web console; tab state in `localStorage['dsh.session-tabs.v1']`.
+- Repository layout: `client.js` (all front-end logic) · `index.js` (empty host entry) · `cordis.patch.yml` (bundle mount) · `locale/*.json` (plugin metadata strings).
+- Debugging: watch for the `[session-tabs]` prefix in the DSH Web console; tab state lives in `localStorage['dsh.session-tabs.v1']` with the shape `{ v: 2, order: [{ k: 's' | 'w', id }], titles, wsTitles, wsLast }`.
+- Backward compatibility: the `v1`-era `order: string[]` is normalized into session entries on read, and the **key name never changes**; the first write back after upgrading copies the original value verbatim to `dsh.session-tabs.v1.bak` (once, for manual recovery). An older plugin reading the new data degrades to session-only tabs and loses no configuration.
 - Tunables: CSS variables `--dsst-height` (36px) / `--dsst-tab-min` (56px) / `--dsst-tab-max` (200px) / `--dsst-pulse` (1.4s).
 
 ## 📄 License
@@ -122,4 +137,4 @@ Package page: <https://www.npmjs.com/package/dsh-bottom-tabs>. Then reload the W
 
 ## ⭐ Support
 
-If this is useful, give it a **Star ⭐**. Ideas and bug reports are welcome as Issues / PRs.
+If it helps, drop a **Star ⭐**; ideas and issues are welcome as Issue / PR.
