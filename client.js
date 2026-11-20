@@ -12,7 +12,7 @@ window.__ModuleLoader__.load({
     }
     const NS = 'session-tabs';
     // 用于确认页面里跑的是哪一版
-    const VERSION = '0.2.0';
+    const VERSION = '0.2.1';
     // 键保持不变：老版本读到新数据只会忽略工作区条目，退化成纯会话 Tab，不崩不丢
     const STORE_KEY = 'dsh.session-tabs.v1';
     const STORE_BACKUP = STORE_KEY + '.bak';
@@ -886,6 +886,15 @@ window.__ModuleLoader__.load({
         return map;
       }, [order, sessionsOf]);
 
+      // 归组线：该组里有当前会话时（工作区标签为当前，或组内某个会话为当前），组内所有会话标签一起显示
+      const groupedActive = React.useMemo(() => {
+        const set = new Set();
+        groupOf.forEach((wsId, index) => {
+          if (sessionsOf(wsId).indexOf(active) >= 0) set.add(index);
+        });
+        return set;
+      }, [groupOf, sessionsOf, active]);
+
       // 工作区弹层：{ wsId, rect, el }
       const [pop, setPop] = React.useState(null);
       const popRef = React.useRef(null);
@@ -1034,7 +1043,7 @@ window.__ModuleLoader__.load({
               dragKey,
               t,
               active: active === entry.id,
-              grouped: groupOf.has(index),
+              grouped: groupedActive.has(index),
               dragging: draggingId === dragKey,
               fallbackTitle: titles[entry.id],
               onSelect: select,
