@@ -89,6 +89,10 @@ npm page: <https://www.npmjs.com/package/dsh-bottom-tabs>. Refresh the Web UI af
 
 ## 🆕 Recent updates
 
+### v0.2.1 — group line lights up by group
+
+- Added a blue top border marking tabs from the same workspace; it shows while any session in that workspace is current.
+
 ### v0.2.0 — workspace tabs
 
 - Right-clicking a workspace in the sidebar now offers **Add to tab strip**.
